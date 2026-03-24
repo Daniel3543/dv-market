@@ -1,10 +1,8 @@
-services:
+﻿services:
   - type: web
     name: dv-market
     env: node
-    buildCommand: |
-      cd server && npm install
-      cd ../client && npm install && npm run build
+    buildCommand: cd server && npm install && cd ../client && npm install && npm run build
     startCommand: cd server && npm start
     envVars:
       - key: NODE_ENV
@@ -13,7 +11,3 @@ services:
         sync: false
       - key: JWT_SECRET
         sync: false
-      - key: STRIPE_SECRET_KEY
-        sync: false
-      - key: FRONTEND_URL
-        value: https://dv-market.onrender.com

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { motion } from 'framer-motion';
-import { FiMail, FiLock, FiUser } from 'react-icons/fi';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiMail, FiLock, FiUser, FiEye, FiEyeOff } from 'react-icons/fi';
 
 <div className="mt-6">
   <div className="relative">

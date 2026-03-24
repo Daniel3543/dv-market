@@ -7,6 +7,12 @@ const path = require('path');
 // Load env vars
 dotenv.config();
 
+// Проверка наличия MONGODB_URI
+if (!process.env.MONGODB_URI) {
+  console.error('❌ MONGODB_URI is not defined in environment variables');
+  process.exit(1);
+}
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
@@ -18,7 +24,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL 
+    ? process.env.FRONTEND_URL || 'https://dv-market.onrender.com'
     : 'http://localhost:3000',
   credentials: true
 }));
@@ -51,4 +57,6 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV}`);
+  console.log(`MongoDB URI: ${process.env.MONGODB_URI ? '✅ Set' : '❌ Not set'}`);
 });

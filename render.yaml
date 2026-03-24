@@ -11,3 +11,7 @@
         sync: false
       - key: JWT_SECRET
         sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: FRONTEND_URL
+        value: https://dv-market.onrender.com

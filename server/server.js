@@ -10,6 +10,7 @@ dotenv.config();
 // Проверка наличия MONGODB_URI
 if (!process.env.MONGODB_URI) {
   console.error('❌ MONGODB_URI is not defined in environment variables');
+  console.error('Please set MONGODB_URI in your .env file or Render environment variables');
   process.exit(1);
 }
 
@@ -43,20 +44,29 @@ app.use('/api/cart', cartRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
+  // Set static folder
   app.use(express.static(path.join(__dirname, '../client/build')));
   
+  // Handle React routing, return all requests to React app
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
   });
 }
 
-// Error handler
-app.use(require('./middleware/errorHandler'));
+// Error handler middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Server Error',
+    error: process.env.NODE_ENV === 'development' ? err : {}
+  });
+});
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV}`);
-  console.log(`MongoDB URI: ${process.env.MONGODB_URI ? '✅ Set' : '❌ Not set'}`);
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🗄️  MongoDB URI: ${process.env.MONGODB_URI ? '✅ Set' : '❌ Not set'}`);
 });

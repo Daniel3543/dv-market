@@ -4,135 +4,6 @@ import { useAuth } from '../hooks/useAuth';
 import { motion } from 'framer-motion';
 import { FiMail, FiLock, FiUser, FiEye, FiEyeOff } from 'react-icons/fi';
 
-<div className="mt-6">
-  <div className="relative">
-    <div className="absolute inset-0 flex items-center">
-      <div className="w-full border-t border-gray-300"></div>
-    </div>
-    <div className="relative flex justify-center text-sm">
-      <span className="px-2 bg-white text-gray-500">Or continue with</span>
-    </div>
-  </div>
-
-  <div className="mt-6 grid grid-cols-2 gap-3">
-    <button
-      type="button"
-      className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-    >
-      Google
-    </button>
-    <button
-      type="button"
-      className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-    >
-      GitHub
-    </button>
-  </div>
-</div>
-
-// Добавьте состояние
-const [confirmPassword, setConfirmPassword] = useState('');
-
-// В форму добавьте поле:
-{!isLogin && (
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">
-      Confirm Password
-    </label>
-    <div className="relative">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <FiLock className="h-5 w-5 text-gray-400" />
-      </div>
-      <input
-        type="password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        className="appearance-none rounded-lg relative block w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-        placeholder="Confirm password"
-      />
-    </div>
-    {confirmPassword && formData.password !== confirmPassword && (
-      <p className="mt-1 text-xs text-red-500">Passwords do not match</p>
-    )}
-  </div>
-)}
-
-// В валидации добавьте проверку:
-if (!isLogin && formData.password !== confirmPassword) {
-  setPasswordError('Passwords do not match');
-  isValid = false;
-}
-
-const [showPassword, setShowPassword] = useState(false);
-
-// В поле пароля добавьте:
-<div className="relative">
-  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-    <FiLock className="h-5 w-5 text-gray-400" />
-  </div>
-  <input
-    type={showPassword ? "text" : "password"}
-    // ... остальные атрибуты
-  />
-  <button
-    type="button"
-    onClick={() => setShowPassword(!showPassword)}
-    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-  >
-    {showPassword ? 
-      <FiEyeOff className="h-5 w-5 text-gray-400" /> : 
-      <FiEye className="h-5 w-5 text-gray-400" />
-    }
-  </button>
-</div>
-
-// Добавьте эти состояния
-const [passwordError, setPasswordError] = useState('');
-const [emailError, setEmailError] = useState('');
-const [nameError, setNameError] = useState('');
-
-// Функция валидации
-const validateForm = () => {
-  let isValid = true;
-  
-  if (!isLogin) {
-    if (formData.name.length < 2) {
-      setNameError('Name must be at least 2 characters');
-      isValid = false;
-    } else {
-      setNameError('');
-    }
-    
-    if (formData.password.length < 6) {
-      setPasswordError('Password must be at least 6 characters');
-      isValid = false;
-    } else {
-      setPasswordError('');
-    }
-  }
-  
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(formData.email)) {
-    setEmailError('Please enter a valid email');
-    isValid = false;
-  } else {
-    setEmailError('');
-  }
-  
-  return isValid;
-};
-
-// В handleSubmit перед отправкой:
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  if (!validateForm()) {
-    return;
-  }
-  
-  // ... остальной код
-};
-
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
@@ -140,7 +11,13 @@ const Auth = () => {
     email: '',
     password: '',
   });
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [nameError, setNameError] = useState('');
+  
   const { login, register } = useAuth();
   const navigate = useNavigate();
 
@@ -148,8 +25,48 @@ const Auth = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    let isValid = true;
+    
+    if (!isLogin) {
+      if (formData.name.length < 2) {
+        setNameError('Name must be at least 2 characters');
+        isValid = false;
+      } else {
+        setNameError('');
+      }
+      
+      if (formData.password.length < 6) {
+        setPasswordError('Password must be at least 6 characters');
+        isValid = false;
+      } else {
+        setPasswordError('');
+      }
+      
+      if (formData.password !== confirmPassword) {
+        setPasswordError('Passwords do not match');
+        isValid = false;
+      }
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setEmailError('Please enter a valid email');
+      isValid = false;
+    } else {
+      setEmailError('');
+    }
+    
+    return isValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
     setLoading(true);
 
     let result;
@@ -211,10 +128,13 @@ const Auth = () => {
                     required={!isLogin}
                     value={formData.name}
                     onChange={handleChange}
-                    className="appearance-none rounded-lg relative block w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                    className={`appearance-none rounded-lg relative block w-full pl-10 px-3 py-2 border ${
+                      nameError ? 'border-red-500' : 'border-gray-300'
+                    } placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm`}
                     placeholder="John Doe"
                   />
                 </div>
+                {nameError && <p className="mt-1 text-xs text-red-500">{nameError}</p>}
               </div>
             )}
 
@@ -234,10 +154,13 @@ const Auth = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="appearance-none rounded-lg relative block w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                  className={`appearance-none rounded-lg relative block w-full pl-10 px-3 py-2 border ${
+                    emailError ? 'border-red-500' : 'border-gray-300'
+                  } placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm`}
                   placeholder="you@example.com"
                 />
               </div>
+              {emailError && <p className="mt-1 text-xs text-red-500">{emailError}</p>}
             </div>
 
             <div>
@@ -251,27 +174,55 @@ const Auth = () => {
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   autoComplete={isLogin ? "current-password" : "new-password"}
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="appearance-none rounded-lg relative block w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                  className={`appearance-none rounded-lg relative block w-full pl-10 pr-10 px-3 py-2 border ${
+                    passwordError ? 'border-red-500' : 'border-gray-300'
+                  } placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm`}
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  {showPassword ? 
+                    <FiEyeOff className="h-5 w-5 text-gray-400" /> : 
+                    <FiEye className="h-5 w-5 text-gray-400" />
+                  }
+                </button>
               </div>
+              {passwordError && <p className="mt-1 text-xs text-red-500">{passwordError}</p>}
+              {!isLogin && (
+                <p className="mt-1 text-xs text-gray-500">
+                  Password must be at least 6 characters
+                </p>
+              )}
             </div>
-          </div>
 
-          {isLogin && (
-            <div className="flex items-center justify-end">
-              <div className="text-sm">
-                <a href="#" className="font-medium text-primary-600 hover:text-primary-500">
-                  Forgot your password?
-                </a>
+            {!isLogin && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FiLock className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="appearance-none rounded-lg relative block w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                    placeholder="Confirm password"
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           <div>
             <button
@@ -294,8 +245,22 @@ const Auth = () => {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Secure authentication</span>
+              <span className="px-2 bg-white text-gray-500">Or continue with</span>
             </div>
+          </div>
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+            >
+              Google
+            </button>
+            <button
+              type="button"
+              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+            >
+              GitHub
+            </button>
           </div>
         </div>
       </motion.div>

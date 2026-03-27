@@ -117,19 +117,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      loading,
-      login,
-      register,
-      logout,
-      updateProfile,
-      addToFavorites,
-      removeFromFavorites,
-      isFavorite,
-      getReferralInfo
-    }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  <AuthContext.Provider value={{
+    user,
+    setUser, // добавьте эту строку
+    loading,
+    login,
+    register,
+    logout,
+    updateProfile,
+    addToFavorites,
+    removeFromFavorites,
+    isFavorite,
+    getReferralInfo
+  }}>
+    {children}
+  </AuthContext.Provider>
+);
 };

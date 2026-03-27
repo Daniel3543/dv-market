@@ -4,6 +4,7 @@ import Layout from './components/Layout/Layout';
 import Loader from './components/UI/Loader';
 import ProtectedRoute from './components/UI/ProtectedRoute';
 import Admin from './pages/Admin';
+import AuthSuccess from './pages/AuthSuccess';
 
 // Lazy load pages for better performance
 const Home = lazy(() => import('./pages/Home'));
@@ -34,13 +35,13 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="auth" element={<Auth />} />
-          <Route path="/admin" element={
-            <ProtectedRoute adminOnly>
-              <Admin />
-            </ProtectedRoute>
-          } />
-          </Route>
-          <Route path="/auth/success" element={<AuthSuccess />} />
+        </Route>
+        <Route path="/admin" element={
+          <ProtectedRoute adminOnly>
+            <Admin />
+          </ProtectedRoute>
+        } />
+        <Route path="/auth/success" element={<AuthSuccess />} />
       </Routes>
     </Suspense>
   );

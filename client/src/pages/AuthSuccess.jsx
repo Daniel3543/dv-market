@@ -6,7 +6,7 @@ import Loader from '../components/UI/Loader';
 const AuthSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth(); // Добавьте setUser
 
   useEffect(() => {
     const token = searchParams.get('token');
@@ -14,8 +14,8 @@ const AuthSuccess = () => {
     
     if (token && userParam) {
       localStorage.setItem('token', token);
-      const user = JSON.parse(decodeURIComponent(userParam));
-      setUser(user);
+      const userData = JSON.parse(decodeURIComponent(userParam));
+      if (setUser) setUser(userData);
       navigate('/');
     } else {
       navigate('/auth');

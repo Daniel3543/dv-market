@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const passport = require('passport');
+const session = require('express-session');
 
 // Load env vars
 dotenv.config();
@@ -19,8 +21,24 @@ const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
 const cartRoutes = require('./routes/cart');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
+
+// Session middleware (для Google OAuth)
+app.use(session({
+  secret: process.env.JWT_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport config
+require('./config/passport')(passport);
 
 // Middleware
 app.use(cors({
@@ -41,13 +59,12 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
-  // Set static folder
   app.use(express.static(path.join(__dirname, '../client/build')));
   
-  // Handle React routing, return all requests to React app
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
   });
@@ -70,24 +87,3 @@ app.listen(PORT, () => {
   console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🗄️  MongoDB URI: ${process.env.MONGODB_URI ? '✅ Set' : '❌ Not set'}`);
 });
-
-// Admin routes
-app.use('/api/admin', require('./routes/admin'));
-
-const passport = require('passport');
-const session = require('express-session');
-
-// Session middleware (для Google OAuth)
-app.use(session({
-  secret: process.env.JWT_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
-}));
-
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Passport config
-require('./config/passport')(passport);

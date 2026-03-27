@@ -20,7 +20,7 @@ const Auth = () => {
   const [emailError, setEmailError] = useState('');
   const [nameError, setNameError] = useState('');
   
-  const { login, register, googleLogin } = useAuth();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {

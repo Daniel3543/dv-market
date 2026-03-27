@@ -70,3 +70,24 @@ app.listen(PORT, () => {
   console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🗄️  MongoDB URI: ${process.env.MONGODB_URI ? '✅ Set' : '❌ Not set'}`);
 });
+
+// Admin routes
+app.use('/api/admin', require('./routes/admin'));
+
+const passport = require('passport');
+const session = require('express-session');
+
+// Session middleware (для Google OAuth)
+app.use(session({
+  secret: process.env.JWT_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport config
+require('./config/passport')(passport);

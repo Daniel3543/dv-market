@@ -3,7 +3,7 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 
     (process.env.NODE_ENV === 'production' 
-      ? 'https://your-app-name.onrender.com/api' 
+      ? 'https://dv-market.onrender.com/api' 
       : 'http://localhost:5000/api'),
   headers: {
     'Content-Type': 'application/json',

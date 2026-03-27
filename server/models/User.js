@@ -32,6 +32,32 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product'
   }],
+  // Новые поля
+  referralCode: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  referredBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  referralCount: {
+    type: Number,
+    default: 0
+  },
+  balance: {
+    type: Number,
+    default: 0
+  },
+  avatar: {
+    type: String,
+    default: ''
+  },
+  googleId: {
+    type: String,
+    sparse: true
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -45,6 +71,14 @@ userSchema.pre('save', async function(next) {
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Generate referral code if not exists
+userSchema.pre('save', async function(next) {
+  if (!this.referralCode) {
+    this.referralCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+  }
+  next();
 });
 
 // Match user entered password to hashed password in database

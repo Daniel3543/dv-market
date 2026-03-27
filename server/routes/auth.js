@@ -1,8 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
-const { register, login, getMe } = require('../controllers/authController');
+const { 
+  register, 
+  login, 
+  getMe, 
+  updateProfile,
+  addToFavorites, 
+  removeFromFavorites,
+  getReferralInfo
+} = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
+const passport = require('passport');
 
 // @route   POST /api/auth/register
 // @desc    Register user
@@ -22,5 +31,36 @@ router.post('/login', login);
 // @desc    Get current user
 // @access  Private
 router.get('/me', protect, getMe);
+
+// @route   PUT /api/auth/profile
+// @desc    Update user profile
+// @access  Private
+router.put('/profile', protect, updateProfile);
+
+// @route   POST /api/auth/favorites
+// @desc    Add to favorites
+// @access  Private
+router.post('/favorites', protect, addToFavorites);
+
+// @route   DELETE /api/auth/favorites/:productId
+// @desc    Remove from favorites
+// @access  Private
+router.delete('/favorites/:productId', protect, removeFromFavorites);
+
+// @route   GET /api/auth/referral
+// @desc    Get referral info
+// @access  Private
+router.get('/referral', protect, getReferralInfo);
+
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/google/callback', 
+  passport.authenticate('google', { session: false, failureRedirect: '/auth' }),
+  (req, res) => {
+    const { token, user } = req.user;
+    res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
+  }
+);
+
 
 module.exports = router;

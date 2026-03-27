@@ -29,9 +29,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email, password, rememberMe = false) => {
     try {
-      const { data } = await api.post('/auth/login', { email, password });
+      const { data } = await api.post('/auth/login', { email, password, rememberMe });
       localStorage.setItem('token', data.token);
       setToken(data.token);
       setUser(data.user);
@@ -43,17 +43,32 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password) => {
+  const register = async (name, email, password, promoCode = '') => {
     try {
-      const { data } = await api.post('/auth/register', { name, email, password });
+      const { data } = await api.post('/auth/register', { name, email, password, promoCode });
       localStorage.setItem('token', data.token);
       setToken(data.token);
       setUser(data.user);
       toast.success('Account created successfully!');
+      if (promoCode) {
+        toast.success('Referral code applied! You got 50 AMD bonus!');
+      }
       return { success: true };
     } catch (error) {
       toast.error(error.response?.data?.message || 'Registration failed');
       return { success: false, error: error.response?.data?.message };
+    }
+  };
+
+  const updateProfile = async (data) => {
+    try {
+      const { data: updatedUser } = await api.put('/auth/profile', data);
+      setUser(updatedUser.user);
+      toast.success('Profile updated');
+      return true;
+    } catch (error) {
+      toast.error('Failed to update profile');
+      return false;
     }
   };
 
@@ -92,6 +107,15 @@ export const AuthProvider = ({ children }) => {
     return user?.favorites?.some(fav => fav._id === productId);
   };
 
+  const getReferralInfo = async () => {
+    try {
+      const { data } = await api.get('/auth/referral');
+      return data;
+    } catch (error) {
+      return null;
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -99,9 +123,11 @@ export const AuthProvider = ({ children }) => {
       login,
       register,
       logout,
+      updateProfile,
       addToFavorites,
       removeFromFavorites,
-      isFavorite
+      isFavorite,
+      getReferralInfo
     }}>
       {children}
     </AuthContext.Provider>

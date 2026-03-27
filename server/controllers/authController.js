@@ -3,9 +3,9 @@ const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 
 // Generate JWT Token
-const generateToken = (id) => {
+const generateToken = (id, expiresIn = '30d') => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
+    expiresIn,
   });
 };
 
@@ -22,7 +22,7 @@ exports.register = async (req, res) => {
       });
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, password, promoCode } = req.body;
 
     // Check if user exists
     const userExists = await User.findOne({ email });
@@ -33,11 +33,29 @@ exports.register = async (req, res) => {
       });
     }
 
+    let referrer = null;
+    let bonus = 0;
+
+    // Check promo code
+    if (promoCode) {
+      const referrerUser = await User.findOne({ referralCode: promoCode.toUpperCase() });
+      if (referrerUser) {
+        referrer = referrerUser._id;
+        // Add bonus to referrer
+        await User.findByIdAndUpdate(referrer, { 
+          $inc: { balance: 100, referralCount: 1 } 
+        });
+        bonus = 50; // Bonus for new user
+      }
+    }
+
     // Create user
     const user = await User.create({
       name,
       email,
-      password
+      password,
+      referredBy: referrer,
+      balance: bonus
     });
 
     const token = generateToken(user._id);
@@ -49,7 +67,10 @@ exports.register = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        referralCode: user.referralCode,
+        balance: user.balance,
+        avatar: user.avatar
       }
     });
   } catch (error) {
@@ -67,7 +88,7 @@ exports.register = async (req, res) => {
 // @access  Public
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ 
@@ -76,7 +97,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Check for user email
+    // Check for user
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
@@ -86,7 +107,6 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Check password
     const isMatch = await user.matchPassword(password);
 
     if (!isMatch) {
@@ -96,7 +116,9 @@ exports.login = async (req, res) => {
       });
     }
 
-    const token = generateToken(user._id);
+    // Set token expiry based on remember me
+    const expiresIn = rememberMe ? '30d' : '1d';
+    const token = generateToken(user._id, expiresIn);
 
     res.json({
       success: true,
@@ -105,7 +127,10 @@ exports.login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        referralCode: user.referralCode,
+        balance: user.balance,
+        avatar: user.avatar
       }
     });
   } catch (error) {
@@ -123,10 +148,101 @@ exports.login = async (req, res) => {
 // @access  Private
 exports.getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).populate('favorites');
+    const user = await User.findById(req.user.id)
+      .populate('favorites')
+      .select('-password');
     res.json({
       success: true,
       user
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+};
+
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, avatar } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { name, avatar },
+      { new: true }
+    ).select('-password');
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+};
+
+// @desc    Add to favorites
+// @route   POST /api/auth/favorites
+// @access  Private
+exports.addToFavorites = async (req, res) => {
+  try {
+    const { productId } = req.body;
+    const user = await User.findById(req.user.id);
+
+    if (!user.favorites.includes(productId)) {
+      user.favorites.push(productId);
+      await user.save();
+    }
+
+    await user.populate('favorites');
+    res.json({ success: true, favorites: user.favorites });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+};
+
+// @desc    Remove from favorites
+// @route   DELETE /api/auth/favorites/:productId
+// @access  Private
+exports.removeFromFavorites = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    user.favorites = user.favorites.filter(
+      id => id.toString() !== req.params.productId
+    );
+    await user.save();
+    await user.populate('favorites');
+    res.json({ success: true, favorites: user.favorites });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+};
+
+// @desc    Get user referral info
+// @route   GET /api/auth/referral
+// @access  Private
+exports.getReferralInfo = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    const referredUsers = await User.find({ referredBy: user._id }).select('name email createdAt');
+    res.json({
+      success: true,
+      referralCode: user.referralCode,
+      referralCount: user.referralCount,
+      balance: user.balance,
+      referredUsers
     });
   } catch (error) {
     res.status(500).json({ 

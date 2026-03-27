@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-// Load environment variables
 dotenv.config();
 
 const connectDB = async () => {
@@ -13,6 +12,8 @@ const connectDB = async () => {
     }
     
     console.log('📡 Connecting to MongoDB...');
+    // Не выводите uri целиком, только для отладки можно показать маскированный
+    console.log('🔗 Connection string is set'); // убрали вывод полной строки
     
     const conn = await mongoose.connect(uri, {
       useNewUrlParser: true,
@@ -20,19 +21,8 @@ const connectDB = async () => {
     });
     
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-    console.log(`📊 Database Name: ${conn.connection.name}`);
   } catch (error) {
     console.error(`❌ MongoDB Connection Error: ${error.message}`);
-    
-    // More detailed error for Atlas connection issues
-    if (error.message.includes('ENOTFOUND') || error.message.includes('getaddrinfo')) {
-      console.error('💡 Tip: Check your internet connection and MongoDB Atlas cluster URL');
-    } else if (error.message.includes('Authentication failed')) {
-      console.error('💡 Tip: Check your MongoDB username and password');
-    } else if (error.message.includes('whitelist')) {
-      console.error('💡 Tip: Add your IP address to MongoDB Atlas Network Access list');
-    }
-    
     process.exit(1);
   }
 };

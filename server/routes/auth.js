@@ -52,15 +52,20 @@ router.delete('/favorites/:productId', protect, removeFromFavorites);
 // @access  Private
 router.get('/referral', protect, getReferralInfo);
 
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+// Google OAuth (только если настроены ключи)
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-router.get('/google/callback', 
-  passport.authenticate('google', { session: false, failureRedirect: '/auth' }),
-  (req, res) => {
-    const { token, user } = req.user;
-    res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
-  }
-);
+  router.get('/google/callback', 
+    passport.authenticate('google', { session: false, failureRedirect: '/auth' }),
+    (req, res) => {
+      const { token, user } = req.user;
+      res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
+    }
+  );
+} else {
+  console.log('⚠️ Google OAuth routes disabled - missing credentials');
+}
 
 
 module.exports = router;

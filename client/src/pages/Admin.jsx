@@ -3,7 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { FiPackage, FiUsers, FiTag, FiShoppingCart, FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi';
+import { FiPackage, FiUsers, FiShoppingCart, FiEdit2, FiTrash2 } from 'react-icons/fi';
 
 const Admin = () => {
   const { user } = useAuth();
@@ -26,11 +26,7 @@ const Admin = () => {
     isFeatured: false
   });
 
-  // Redirect if not admin
-  if (!user || user.role !== 'admin') {
-    return <Navigate to="/" replace />;
-  }
-
+  // Все хуки ДО условного возврата!
   useEffect(() => {
     fetchData();
   }, [activeTab]);
@@ -136,6 +132,11 @@ const Admin = () => {
     { id: 'orders', label: 'Orders', icon: FiShoppingCart },
     { id: 'users', label: 'Users', icon: FiUsers }
   ];
+
+  // Условный возврат после всех хуков
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="container-custom py-8">

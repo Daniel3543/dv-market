@@ -43,7 +43,12 @@ exports.sendVerificationEmail = async (user, token) => {
     `,
   };
   
-  await transporter.sendMail(mailOptions);
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Verification email sent to ${user.email}`);
+  } catch (error) {
+    console.error('Email send error:', error);
+  }
 };
 
 // Send password reset email
@@ -72,5 +77,10 @@ exports.sendPasswordResetEmail = async (user, token) => {
     `,
   };
   
-  await transporter.sendMail(mailOptions);
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Password reset email sent to ${user.email}`);
+  } catch (error) {
+    console.error('Email send error:', error);
+  }
 };

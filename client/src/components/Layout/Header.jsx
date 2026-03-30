@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../hooks/useCart';
 import { FiShoppingCart, FiUser, FiHeart, FiMenu, FiX } from 'react-icons/fi';
+import LanguageSwitcher from '../UI/LanguageSwitcher';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -98,6 +99,13 @@ const Header = () => {
                 Sign In
               </Link>
             )}
+          </div>
+          <div className="hidden md:flex items-center space-x-4">
+            <LanguageSwitcher />
+              <Link to="/cart" className="relative">
+                {/* ... */}
+              </Link>
+            {/* ... */}
           </div>
 
           {/* Mobile Menu Button */}

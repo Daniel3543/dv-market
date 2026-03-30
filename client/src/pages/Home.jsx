@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import api from '../services/api';
-import ProductCard3D from '../components/Product/ProductCard3D';  // ← исправлено
+import ProductCard3D from '../components/Product/ProductCard3D';
 import GlowButton from '../components/UI/GlowButton';
 import NeonText from '../components/UI/NeonText';
 import Skeleton from '../components/UI/Skeleton';
@@ -135,7 +135,6 @@ const Home = () => {
             </h2>
             <p className="text-gray-400 mt-2">Hand-picked premium selections</p>
           </motion.div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {isLoading ? (
               [...Array(4)].map((_, i) => <Skeleton key={i} className="h-80 rounded-2xl" />)

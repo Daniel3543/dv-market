@@ -58,7 +58,7 @@ router.get('/referral', protect, getReferralInfo);
 // @access  Private
 router.put('/deduct-bonus', protect, deductBonus);
 
-// Google OAuth (только если настроены ключи)
+// Google OAuth (only if configured)
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -72,6 +72,5 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 } else {
   console.log('⚠️ Google OAuth routes disabled - missing credentials');
 }
-
 
 module.exports = router;

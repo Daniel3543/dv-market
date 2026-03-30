@@ -1,8 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FiCopy, FiCheck, FiUsers, FiDollarSign, FiTrendingUp, FiShare2 } from 'react-icons/fi';
-import GlassCard from '../UI/GlassCard';
-import GlowButton from '../UI/GlowButton';
 
 const ReferralCard = ({ referralData, onCopy, copied }) => {
   const { referralCode, referralCount, balance, referredUsers = [] } = referralData || {};
@@ -59,9 +57,6 @@ const ReferralCard = ({ referralData, onCopy, copied }) => {
               <FiShare2 />
               Share
             </button>
-            <GlowButton variant="outline" className="px-6 py-2">
-              Copy Link
-            </GlowButton>
           </div>
         </div>
       </motion.div>

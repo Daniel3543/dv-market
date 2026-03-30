@@ -41,11 +41,11 @@ exports.register = async (req, res) => {
       const referrerUser = await User.findOne({ referralCode: promoCode.toUpperCase() });
       if (referrerUser) {
         referrer = referrerUser._id;
-        // Add bonus to referrer (5 AMD вместо 100)
+        // Add bonus to referrer (5 AMD instead of 100)
         await User.findByIdAndUpdate(referrer, { 
           $inc: { balance: 5, referralCount: 1 } 
         });
-        bonus = 2.5; // Bonus for new user (2.5 AMD вместо 50)
+        bonus = 2.5; // Bonus for new user (2.5 AMD instead of 50)
       }
     }
 

@@ -313,8 +313,8 @@ const Auth = () => {
         </div>
 
         {!isLogin && (
-          <div className="mt-4 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
-            <p className="text-xs text-green-400 text-center">
+          <div className="mt-4 p-3 bg-primary-500/10 rounded-lg border border-primary-500/20">
+            <p className="text-xs text-primary-300 text-center">
               🎉 Get 2.5 AMD bonus on registration! <br />
               Share your referral code with friends and earn 5 AMD per referral!
             </p>

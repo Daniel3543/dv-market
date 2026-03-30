@@ -45,6 +45,12 @@ const Header = () => {
             <Link to="/catalog" className="text-gray-700 hover:text-primary-600 transition-colors">
               Catalog
             </Link>
+            <Link to="/about" className="text-gray-700 dark:text-gray-300 hover:text-primary-600 transition-colors">
+              About
+            </Link>
+            <Link to="/contact" className="text-gray-700 dark:text-gray-300 hover:text-primary-600 transition-colors">
+              Contact
+            </Link>
             {user && (
               <Link to="/profile" className="text-gray-700 hover:text-primary-600 transition-colors">
                 Profile

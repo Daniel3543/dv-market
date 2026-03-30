@@ -3,16 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../hooks/useCart';
 import { useLanguage } from '../../context/LanguageContext';
-import { FiShoppingCart, FiUser, FiHeart, FiMenu, FiX } from 'react-icons/fi';
+import { FiShoppingCart, FiUser, FiMenu, FiX } from 'react-icons/fi';
 import LanguageSwitcher from '../UI/LanguageSwitcher';
-import { useLanguage } from '../../context/LanguageContext';
 
 const Header = () => {
-  const { t } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const { getCartCount } = useCart();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +33,6 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="relative">
-              {/* Анимированное свечение вокруг логотипа */}
               <div className="absolute inset-0 bg-primary-500/30 rounded-xl blur-md group-hover:blur-xl transition-all duration-500"></div>
               <img 
                 src="/images/dvlogo.png" 

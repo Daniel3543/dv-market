@@ -11,7 +11,7 @@ const ReferralCard = ({ referralData, onCopy, copied }) => {
     if (navigator.share) {
       navigator.share({
         title: 'Join DV MARKET',
-        text: `Use my referral code ${referralCode} and get 50 AMD bonus!`,
+        text: `Use my referral code ${referralCode} and get 2.5 AMD bonus!`,
         url: window.location.origin,
       });
     } else {
@@ -115,7 +115,7 @@ const ReferralCard = ({ referralData, onCopy, copied }) => {
                   <p className="font-medium">{user.name}</p>
                   <p className="text-xs text-gray-500">{new Date(user.createdAt).toLocaleDateString()}</p>
                 </div>
-                <span className="text-green-400 text-sm">+50 AMD</span>
+                <span className="text-green-400 text-sm">+5 AMD</span>
               </div>
             ))
           ) : (
@@ -127,8 +127,8 @@ const ReferralCard = ({ referralData, onCopy, copied }) => {
 
         <div className="mt-6 p-4 bg-primary-500/10 rounded-xl border border-primary-500/20">
           <p className="text-sm text-center">
-            🎉 <span className="text-primary-400">Referral Bonus:</span> Get 100 AMD for each friend who joins using your code!
-            Your friend also gets 50 AMD bonus on registration.
+            🎉 <span className="text-primary-400">Referral Bonus:</span> Get 5 AMD for each friend who joins using your code!
+            Your friend also gets 2.5 AMD bonus on registration.
           </p>
         </div>
       </motion.div>

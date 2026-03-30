@@ -180,27 +180,27 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-secondary-500/10"></div>
-        <div className="container mx-auto text-center relative z-10">
+        <section className="py-20 px-4 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-secondary-500/10"></div>
+          <div className="container mx-auto text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             className="glass p-12 rounded-3xl max-w-3xl mx-auto"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Ready to <span className="neon-text">Join the Future?</span>
-            </h2>
-            <p className="text-gray-300 mb-8">
-              Get 100 AMD bonus on your first order + exclusive offers
-            </p>
-            <GlowButton to="/auth" size="lg">
-              Start Shopping
-            </GlowButton>
-          </motion.div>
-        </div>
-      </section>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Ready to <span className="neon-text">Join the Future?</span>
+          </h2>
+          <p className="text-gray-300 mb-8">
+            Get 2.5 AMD bonus on your first order + exclusive offers
+          </p>
+          <GlowButton to="/auth" size="lg">
+            Start Shopping
+          </GlowButton>
+        </motion.div>
+      </div>
+    </section>
     </div>
   );
 };

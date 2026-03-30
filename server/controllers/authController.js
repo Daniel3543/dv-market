@@ -41,11 +41,11 @@ exports.register = async (req, res) => {
       const referrerUser = await User.findOne({ referralCode: promoCode.toUpperCase() });
       if (referrerUser) {
         referrer = referrerUser._id;
-        // Add bonus to referrer
+        // Add bonus to referrer (5 AMD вместо 100)
         await User.findByIdAndUpdate(referrer, { 
-          $inc: { balance: 100, referralCount: 1 } 
+          $inc: { balance: 5, referralCount: 1 } 
         });
-        bonus = 50; // Bonus for new user
+        bonus = 2.5; // Bonus for new user (2.5 AMD вместо 50)
       }
     }
 
@@ -230,6 +230,29 @@ exports.removeFromFavorites = async (req, res) => {
   }
 };
 
+// @desc    Get user referral info
+// @route   GET /api/auth/referral
+// @access  Private
+exports.getReferralInfo = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    const referredUsers = await User.find({ referredBy: user._id }).select('name email createdAt');
+    res.json({
+      success: true,
+      referralCode: user.referralCode,
+      referralCount: user.referralCount,
+      balance: user.balance,
+      referredUsers
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+};
+
 // @desc    Deduct bonus from user balance
 // @route   PUT /api/auth/deduct-bonus
 // @access  Private
@@ -251,29 +274,6 @@ exports.deductBonus = async (req, res) => {
     res.json({ 
       success: true, 
       balance: user.balance 
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Server error', 
-      error: error.message 
-    });
-  }
-};
-
-// @desc    Get user referral info
-// @route   GET /api/auth/referral
-// @access  Private
-exports.getReferralInfo = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    const referredUsers = await User.find({ referredBy: user._id }).select('name email createdAt');
-    res.json({
-      success: true,
-      referralCode: user.referralCode,
-      referralCount: user.referralCount,
-      balance: user.balance,
-      referredUsers
     });
   } catch (error) {
     res.status(500).json({ 

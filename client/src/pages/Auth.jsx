@@ -313,10 +313,10 @@ const Auth = () => {
         </div>
 
         {!isLogin && (
-          <div className="mt-4 p-3 bg-green-50 rounded-lg">
-            <p className="text-xs text-green-700 text-center">
-              🎉 Get 50 AMD bonus on registration! <br />
-              Share your referral code with friends and earn 100 AMD per referral!
+          <div className="mt-4 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+            <p className="text-xs text-green-400 text-center">
+              🎉 Get 2.5 AMD bonus on registration! <br />
+              Share your referral code with friends and earn 5 AMD per referral!
             </p>
           </div>
         )}

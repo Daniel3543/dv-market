@@ -7,15 +7,19 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 // @access  Private
 exports.createOrder = async (req, res) => {
   try {
-    const { items, totalAmount, shippingAddress, paymentMethod } = req.body;
+    const { items, totalAmount, subtotal, shipping, bonusUsed, shippingAddress, paymentMethod } = req.body;
     
     // Create order
     const order = await Order.create({
       user: req.user.id,
       items,
       totalAmount,
+      subtotal,
+      shipping,
+      bonusUsed: bonusUsed || 0,
       shippingAddress,
-      paymentStatus: 'pending'
+      paymentMethod: paymentMethod || 'card',
+      paymentStatus: bonusUsed === totalAmount ? 'completed' : 'pending'
     });
     
     // Clear user's cart
@@ -24,10 +28,19 @@ exports.createOrder = async (req, res) => {
       { items: [], updatedAt: Date.now() }
     );
     
-    // Create payment intent
+    // If fully paid with bonus, don't create Stripe payment intent
+    if (bonusUsed === totalAmount) {
+      return res.status(201).json({
+        success: true,
+        order,
+        clientSecret: null
+      });
+    }
+    
+    // Create payment intent for remaining amount
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(totalAmount * 100),
-      currency: 'usd',
+      amount: Math.round((totalAmount - (bonusUsed || 0)) * 100),
+      currency: 'amd',
       metadata: { orderId: order._id.toString() }
     });
     
@@ -40,6 +53,7 @@ exports.createOrder = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
 
 // @desc    Get user orders
 // @route   GET /api/orders

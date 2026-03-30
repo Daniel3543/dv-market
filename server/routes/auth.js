@@ -8,7 +8,8 @@ const {
   updateProfile,
   addToFavorites, 
   removeFromFavorites,
-  getReferralInfo
+  getReferralInfo,
+  deductBonus
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 const passport = require('passport');
@@ -51,6 +52,11 @@ router.delete('/favorites/:productId', protect, removeFromFavorites);
 // @desc    Get referral info
 // @access  Private
 router.get('/referral', protect, getReferralInfo);
+
+// @route   PUT /api/auth/deduct-bonus
+// @desc    Deduct bonus from user balance
+// @access  Private
+router.put('/deduct-bonus', protect, deductBonus);
 
 // Google OAuth (только если настроены ключи)
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {

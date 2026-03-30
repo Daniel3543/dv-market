@@ -20,6 +20,18 @@ const orderSchema = new mongoose.Schema({
     },
     price: Number
   }],
+  subtotal: {
+    type: Number,
+    required: true
+  },
+  shipping: {
+    type: Number,
+    default: 0
+  },
+  bonusUsed: {
+    type: Number,
+    default: 0
+  },
   totalAmount: {
     type: Number,
     required: true
@@ -29,6 +41,11 @@ const orderSchema = new mongoose.Schema({
     city: String,
     postalCode: String,
     country: String
+  },
+  paymentMethod: {
+    type: String,
+    enum: ['card', 'bonus', 'cash'],
+    default: 'card'
   },
   paymentStatus: {
     type: String,

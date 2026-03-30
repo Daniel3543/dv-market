@@ -230,6 +230,37 @@ exports.removeFromFavorites = async (req, res) => {
   }
 };
 
+// @desc    Deduct bonus from user balance
+// @route   PUT /api/auth/deduct-bonus
+// @access  Private
+exports.deductBonus = async (req, res) => {
+  try {
+    const { amount } = req.body;
+    
+    const user = await User.findById(req.user.id);
+    if (user.balance < amount) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Insufficient bonus balance' 
+      });
+    }
+    
+    user.balance -= amount;
+    await user.save();
+    
+    res.json({ 
+      success: true, 
+      balance: user.balance 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+};
+
 // @desc    Get user referral info
 // @route   GET /api/auth/referral
 // @access  Private

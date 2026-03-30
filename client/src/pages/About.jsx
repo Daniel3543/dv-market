@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FiLeaf, FiTruck, FiHeart, FiUsers, FiAward, FiGlobe } from 'react-icons/fi';
+import { FiFeather, FiTruck, FiHeart, FiUsers, FiAward, FiGlobe } from 'react-icons/fi';
 import GlowButton from '../components/UI/GlowButton';
 import NeonText from '../components/UI/NeonText';
 
 const About = () => {
   const features = [
-    { icon: <FiLeaf />, title: '100% Organic', desc: 'Certified organic produce from local farms' },
+    { icon: <FiFeather />, title: '100% Organic', desc: 'Certified organic produce from local farms' },
     { icon: <FiTruck />, title: 'Lightning Delivery', desc: '30-minute express delivery to your door' },
     { icon: <FiHeart />, title: 'Premium Quality', desc: 'Hand-picked selection by experts' },
     { icon: <FiUsers />, title: 'Community Driven', desc: 'Supporting local farmers' },

@@ -5,13 +5,14 @@ import { useCart } from '../../hooks/useCart';
 import { useLanguage } from '../../context/LanguageContext';
 import { FiShoppingCart, FiUser, FiHeart, FiMenu, FiX } from 'react-icons/fi';
 import LanguageSwitcher from '../UI/LanguageSwitcher';
+import { useLanguage } from '../../context/LanguageContext';
 
 const Header = () => {
+  const { t } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const { getCartCount } = useCart();
-  const { t } = useLanguage();
   const navigate = useNavigate();
 
   useEffect(() => {

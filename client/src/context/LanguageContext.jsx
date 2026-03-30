@@ -26,10 +26,13 @@ export const LanguageProvider = ({ children }) => {
   useEffect(() => {
     const loadTranslations = async () => {
       try {
+        // Динамический импорт JSON файлов
         const module = await import(`../locales/${language}.json`);
         setTranslations(module.default);
+        console.log(`Loaded translations for: ${language}`, module.default);
       } catch (error) {
-        console.error('Failed to load translations:', error);
+        console.error(`Failed to load translations for ${language}:`, error);
+        // Загружаем английский как fallback
         const fallback = await import('../locales/en.json');
         setTranslations(fallback.default);
       }
@@ -59,6 +62,7 @@ export const LanguageProvider = ({ children }) => {
       });
     }
     
+    // Если перевод не найден, возвращаем ключ
     return key;
   };
 

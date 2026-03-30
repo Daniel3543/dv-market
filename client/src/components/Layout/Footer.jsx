@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
 import { FiFacebook, FiTwitter, FiInstagram, FiMail, FiPhone, FiMapPin, FiSend } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
 const Footer = () => {
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [subscribing, setSubscribing] = useState(false);
 
@@ -11,7 +13,6 @@ const Footer = () => {
     e.preventDefault();
     if (!email) return;
     setSubscribing(true);
-    // Здесь можно добавить API для подписки
     setTimeout(() => {
       toast.success('Subscribed successfully!');
       setEmail('');
@@ -25,15 +26,20 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand with Logo */}
           <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-accent-500 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-2xl">DV</span>
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary-500/30 rounded-xl blur-md"></div>
+                <img 
+                  src="/images/dvlogo.png" 
+                  alt="DV MARKET" 
+                  className="relative w-12 h-12 object-contain rounded-xl"
+                />
               </div>
               <div>
                 <span className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
-                  MARKET
+                  DV MARKET
                 </span>
-                <p className="text-xs text-gray-400">Fresh & Organic</p>
+                <p className="text-xs text-gray-400">{t('common.tagline')}</p>
               </div>
             </div>
             <p className="text-gray-400 text-sm">
@@ -45,10 +51,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><Link to="/" className="text-gray-400 hover:text-primary-400 transition-colors">Home</Link></li>
-              <li><Link to="/catalog" className="text-gray-400 hover:text-primary-400 transition-colors">Catalog</Link></li>
-              <li><Link to="/about" className="text-gray-400 hover:text-primary-400 transition-colors">About Us</Link></li>
-              <li><Link to="/contact" className="text-gray-400 hover:text-primary-400 transition-colors">Contact</Link></li>
+              <li><Link to="/" className="text-gray-400 hover:text-primary-400 transition-colors">{t('common.home')}</Link></li>
+              <li><Link to="/catalog" className="text-gray-400 hover:text-primary-400 transition-colors">{t('common.catalog')}</Link></li>
+              <li><Link to="/about" className="text-gray-400 hover:text-primary-400 transition-colors">{t('common.about')}</Link></li>
+              <li><Link to="/contact" className="text-gray-400 hover:text-primary-400 transition-colors">{t('common.contact')}</Link></li>
             </ul>
           </div>
 
@@ -108,7 +114,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; 2024 DV MARKET. All rights reserved. | Designed with ❤️ for fresh food</p>
+          <p>&copy; 2026 DV MARKET. All rights reserved. | Designed with ❤️ for fresh food</p>
         </div>
       </div>
     </footer>

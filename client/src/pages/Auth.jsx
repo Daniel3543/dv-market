@@ -98,9 +98,14 @@ const Auth = () => {
       >
         <div>
           <div className="flex justify-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-accent-500 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white text-2xl font-bold">DV</span>
-            </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-primary-500/30 rounded-xl blur-md"></div>
+                <img 
+                src="/images/dvlogo.png" 
+                alt="DV MARKET" 
+                className="relative w-20 h-20 object-contain rounded-xl"
+                />
+              </div>
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             {isLogin ? 'Welcome Back' : 'Create Account'}
@@ -137,7 +142,7 @@ const Auth = () => {
                     className={`appearance-none rounded-lg relative block w-full pl-10 px-3 py-2 border ${
                       nameError ? 'border-red-500' : 'border-gray-300'
                     } placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm`}
-                    placeholder="John Doe"
+                    placeholder="UserName"
                   />
                 </div>
                 {nameError && <p className="mt-1 text-xs text-red-500">{nameError}</p>}

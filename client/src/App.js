@@ -5,6 +5,9 @@ import Loader from './components/UI/Loader';
 import ProtectedRoute from './components/UI/ProtectedRoute';
 import Admin from './pages/Admin';
 import AuthSuccess from './pages/AuthSuccess';
+import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 // Lazy load pages for better performance
 const Home = lazy(() => import('./pages/Home'));
@@ -23,6 +26,9 @@ function App() {
           <Route index element={<Home />} />
           <Route path="catalog" element={<Catalog />} />
           <Route path="product/:id" element={<ProductDetail />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={
             <ProtectedRoute>

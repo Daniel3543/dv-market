@@ -9,7 +9,11 @@ const {
   addToFavorites, 
   removeFromFavorites,
   getReferralInfo,
-  deductBonus
+  deductBonus,
+  verifyEmail,
+  resendVerification,
+  forgotPassword,
+  resetPassword
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 const passport = require('passport');
@@ -57,6 +61,14 @@ router.get('/referral', protect, getReferralInfo);
 // @desc    Deduct bonus from user balance
 // @access  Private
 router.put('/deduct-bonus', protect, deductBonus);
+
+// Email verification routes
+router.get('/verify-email/:token', verifyEmail);
+router.post('/resend-verification', resendVerification);
+
+// Password reset routes
+router.post('/forgot-password', forgotPassword);
+router.put('/reset-password/:token', resetPassword);
 
 // Google OAuth (only if configured)
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {

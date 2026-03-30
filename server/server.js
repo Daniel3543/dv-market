@@ -6,6 +6,7 @@ const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
 
+
 // Load env vars
 dotenv.config();
 
@@ -87,3 +88,9 @@ app.listen(PORT, () => {
   console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🗄️  MongoDB URI: ${process.env.MONGODB_URI ? '✅ Set' : '❌ Not set'}`);
 });
+
+const { requireVerifiedEmail } = require('./middleware/verifyEmail');
+
+// Используйте для роутов, требующих верификации
+// Например:
+// app.use('/api/orders', protect, requireVerifiedEmail, orderRoutes);

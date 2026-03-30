@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import api from '../services/api';
-import ProductCard from '../components/Product/ProductCard';
+import ProductCard3D from '../components/Product/ProductCard3D';
 import ProductFilters from '../components/Product/ProductFilters';
-import Loader from '../components/UI/Loader';
+import Skeleton from '../components/UI/Skeleton';
 import { FiSearch } from 'react-icons/fi';
 
 const Catalog = () => {
@@ -66,7 +66,7 @@ const Catalog = () => {
                 name="search"
                 defaultValue={filters.search}
                 placeholder="Search products..."
-                className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-3 pl-12 glass border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
               <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <button type="submit" className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary-600 text-white px-4 py-1 rounded-md hover:bg-primary-700">
@@ -77,13 +77,13 @@ const Catalog = () => {
 
           {/* Results Count */}
           <div className="mb-4 flex justify-between items-center">
-            <p className="text-gray-600">
+            <p className="text-gray-400">
               {data?.total || 0} products found
             </p>
             <select
               value={filters.sort}
               onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
-              className="px-3 py-1 border border-gray-300 rounded-md"
+              className="px-3 py-1 glass border border-white/10 rounded-md"
             >
               <option value="newest">Newest</option>
               <option value="price_asc">Price: Low to High</option>
@@ -94,9 +94,11 @@ const Catalog = () => {
 
           {/* Products Grid */}
           {isLoading ? (
-            <Loader />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-80 rounded-2xl" />)}
+            </div>
           ) : error ? (
-            <div className="text-center text-red-600 py-8">
+            <div className="text-center text-red-400 py-8">
               Error loading products. Please try again.
             </div>
           ) : data?.products?.length === 0 ? (
@@ -106,7 +108,7 @@ const Catalog = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {data?.products?.map((product) => (
-                <ProductCard key={product._id} product={product} />
+                <ProductCard3D key={product._id} product={product} />
               ))}
             </div>
           )}

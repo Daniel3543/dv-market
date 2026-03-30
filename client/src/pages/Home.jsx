@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import api from '../services/api';
-import ProductCard3D from '../components/Product/ProductCard3D';
+import ProductCard3D from '../components/Product/ProductCard3D';  // ← исправлено
 import GlowButton from '../components/UI/GlowButton';
 import NeonText from '../components/UI/NeonText';
 import Skeleton from '../components/UI/Skeleton';
